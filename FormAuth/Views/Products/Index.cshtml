@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FormAuth.Models.Product>
+@using FormAuth.Models;
+@{
+    ViewBag.Title = "Index";
+}
+@{
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+<div class="container">
+    @if (pager.TotalPage > 0)
+    {
+        <ul class="pagination justified-content-end">
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item" @(pge == pager.CurrentPage ? "active" : "")>
+                    @Html.ActionLink("" + @pge + "", "Index", "Products", new { @Pg = pge }, new { @class = "Page-link" })
+
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+<h2>Product</h2>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ProductId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductId })
+                </td>
+            }
+
+        </tr>
+    }
+
+</table>
